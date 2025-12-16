@@ -23,27 +23,27 @@ const FoodMenu=[];
 //dummy code 
 //Add food Item
 
-app.post("/admin",(req,res)=>{
+app.use("/admin",(req,res,next)=>{
     const token="ABCDEF"
     const Access= token==="ABCDEF" ? 1 : 0;
 
-    const food=req.body;
+    if(!Access){
+        res.status(403).send("You are not authorized Person to change");
+    }
+
+    next();
+})
+
+app.post("/admin",(req,res)=>{
+
+        const food=req.body;
     
-    if(Access){
         FoodItem.push(food);
         res.status(201).send("Food added on menu Successfully");
-    }
-    else{
-        res.status(403).send("Forbidden No Permission(authorization failed");
-    }
     
 })
 
 app.delete("/admin/:id",(req,res)=>{
-    const token="ABCDEF";
-    const Access= token ==="ABCDEF" ? 1 : 0;
-
-    if(Access){
         const id=parseInt(req.params.id);
 
         const index=FoodItem.findIndex(item=>item.id===id);
@@ -55,10 +55,6 @@ app.delete("/admin/:id",(req,res)=>{
             FoodItem.splice(index,1);
             res.status(200).send("Item deleted successfully");
         }
-    }
-    else{
-        res.status(403).send("authorization failed no permission");
-    }
 })
 
 app.get("/food",(req,res)=>{
@@ -69,10 +65,6 @@ app.get("/food",(req,res)=>{
 
 //To update partially
 app.patch("/admin",(req,res)=>{
-    const token="ABCDEF";
-    const Access= token==="ABCDEF"?1:0;
-
-    if(Access){
         const id=req.body.id;
         const food=req.body.food;
         const price=req.body.price;
@@ -88,10 +80,6 @@ app.patch("/admin",(req,res)=>{
 
             res.status(200).send("Updated price and food");
         }
-    }
-    else{
-        res.status(403).send("You have no authorization");
-    }
 })
 
 
