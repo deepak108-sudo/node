@@ -5,6 +5,8 @@ It is a function that runs b/w client req. and server res. to process,modify or 
 
 - app.use() handle all http method .get,post,delete,patch
 
+- I have placed just above the /admin so that it match and .use take then process the request first then forward.
+
 Authentication: Process of verifying the identity of a user or system to confirm that they are who they claim to be. **who are you**
 
 Authorization: What the power to do.

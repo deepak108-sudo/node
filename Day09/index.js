@@ -17,11 +17,60 @@ const FoodItem=[
     {id:11,food:"Egg Chomin",category:"non-veg",price:70},
 ]
 
-const FoodMenu=[];
+const addToCart=[];
 
 //Authentication krna hoga ki admin hi hai
 //dummy code 
 //Add food Item
+
+app.post("/user/:id",(req,res)=>{
+    const id=parseInt(req.params.id);
+
+    const food=FoodItem.find(item=>item.id===id);
+
+    if(food){
+        addToCart.push(food);
+        res.status(200).send("Added to Cart");
+    }
+    else {
+        res.send("Item out of Stock");
+    }
+})
+
+//Look in my cart
+app.get("/user/cart",(req,res)=>{
+    if(addToCart.length===0){
+        res.send("Cart is empty");
+    }
+    else{
+        res.status(200).send(addToCart);
+    }
+})
+
+//Delete
+app.delete("/user/:id",(req,res)=>{
+    const id=parseInt(req.params.id);
+
+    const idx=addToCart.findIndex(item=> item.id===id);
+    if(idx===-1){
+        res.status(404).send("Item not Present in cart");
+    }
+    else{
+        addToCart.splice(idx,1);
+        res.status(200).send("Item removed from Cart");
+    }
+})
+
+app.get("/dummy",(req,res)=>{
+    try{
+        JSON.parse("Hello Guys");
+        res.status(200).send("Success");
+    }
+    catch(err){
+        res.status(400).send("Error catched successfully");
+    }
+})
+
 
 app.use("/admin",(req,res,next)=>{
     const token="ABCDEF"
@@ -81,6 +130,8 @@ app.patch("/admin",(req,res)=>{
             res.status(200).send("Updated price and food");
         }
 })
+
+
 
 
 app.listen(3000,()=>{
